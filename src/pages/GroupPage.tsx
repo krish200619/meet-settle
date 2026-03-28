@@ -227,49 +227,52 @@ const GroupPage = () => {
 
             {/* Add expense */}
             {group.members.length >= 2 ? (
-              <Dialog open={expOpen} onOpenChange={setExpOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-primary text-primary-foreground h-12 rounded-xl">
-                    <Plus className="w-4 h-4 mr-2" /> Add Expense
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Expense</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-3 pt-2">
-                    <Input
-                      placeholder="What was it for?"
-                      value={expDesc}
-                      onChange={(e) => setExpDesc(e.target.value)}
-                    />
-                    <Input
-                      placeholder="Amount (₹)"
-                      type="number"
-                      value={expAmount}
-                      onChange={(e) => setExpAmount(e.target.value)}
-                    />
-                    <Select value={expPaidBy} onValueChange={setExpPaidBy}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Who paid?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {group.members.map((m) => (
-                          <SelectItem key={m.id} value={m.id}>
-                            {m.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      onClick={handleAddExpense}
-                      className="w-full bg-primary text-primary-foreground"
-                    >
-                      Add Expense
+              <div className="space-y-3">
+                <Dialog open={expOpen} onOpenChange={setExpOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-primary text-primary-foreground h-12 rounded-xl">
+                      <Plus className="w-4 h-4 mr-2" /> Add Expense
                     </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add Expense</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-3 pt-2">
+                      <Input
+                        placeholder="What was it for?"
+                        value={expDesc}
+                        onChange={(e) => setExpDesc(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Amount (₹)"
+                        type="number"
+                        value={expAmount}
+                        onChange={(e) => setExpAmount(e.target.value)}
+                      />
+                      <Select value={expPaidBy} onValueChange={setExpPaidBy}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Who paid?" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {group.members.map((m) => (
+                            <SelectItem key={m.id} value={m.id}>
+                              {m.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={handleAddExpense}
+                        className="w-full bg-primary text-primary-foreground"
+                      >
+                        Add Expense
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                <BillScanner members={group.members} onAddExpenses={handleBillExpenses} />
+              </div>
             ) : (
               <p className="text-center text-sm text-muted-foreground py-4">
                 Add at least 2 members to start adding expenses
