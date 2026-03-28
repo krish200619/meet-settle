@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import GroupPage from "./pages/GroupPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
-
+import Personal from "./pages/Personal";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -19,6 +19,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/group/:id" element={<GroupPage />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/personal" element={<Personal />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

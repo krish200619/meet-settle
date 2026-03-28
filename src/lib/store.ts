@@ -13,6 +13,7 @@ export interface Expense {
   paidBy: string; // member id
   splitAmong: string[]; // member ids
   createdAt: string;
+
 }
 
 export interface Settlement {
