@@ -94,6 +94,14 @@ const GroupPage = () => {
     reload();
   };
 
+  const handleBillExpenses = (expenses: { description: string; amount: number; paidBy: string }[]) => {
+    const splitAmong = group.members.map((m) => m.id);
+    expenses.forEach((exp) => {
+      addExpense(group.id, exp.description, exp.amount, exp.paidBy, splitAmong);
+    });
+    reload();
+  };
+
   const handleDelete = (expenseId: string) => {
     deleteExpense(group.id, expenseId);
     reload();
@@ -272,6 +280,7 @@ const GroupPage = () => {
 
         {tab === "settle" && (
           <div className="space-y-4">
+            <SmartReminders settlements={settlements} getMemberName={getMemberName} />
             <p className="text-center text-sm text-muted-foreground font-medium">
               Simplified Payments
             </p>
