@@ -12,6 +12,8 @@ import {
 } from "@/lib/store";
 import { formatCurrency, timeAgo } from "@/lib/utils";
 import { ArrowLeft, Plus, Share2, Trash2, ExternalLink } from "lucide-react";
+import BillScanner from "@/components/BillScanner";
+import SmartReminders from "@/components/SmartReminders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -89,6 +91,14 @@ const GroupPage = () => {
     setExpAmount("");
     setExpPaidBy("");
     setExpOpen(false);
+    reload();
+  };
+
+  const handleBillExpenses = (expenses: { description: string; amount: number; paidBy: string }[]) => {
+    const splitAmong = group.members.map((m) => m.id);
+    expenses.forEach((exp) => {
+      addExpense(group.id, exp.description, exp.amount, exp.paidBy, splitAmong);
+    });
     reload();
   };
 
@@ -217,49 +227,52 @@ const GroupPage = () => {
 
             {/* Add expense */}
             {group.members.length >= 2 ? (
-              <Dialog open={expOpen} onOpenChange={setExpOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-primary text-primary-foreground h-12 rounded-xl">
-                    <Plus className="w-4 h-4 mr-2" /> Add Expense
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Expense</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-3 pt-2">
-                    <Input
-                      placeholder="What was it for?"
-                      value={expDesc}
-                      onChange={(e) => setExpDesc(e.target.value)}
-                    />
-                    <Input
-                      placeholder="Amount (₹)"
-                      type="number"
-                      value={expAmount}
-                      onChange={(e) => setExpAmount(e.target.value)}
-                    />
-                    <Select value={expPaidBy} onValueChange={setExpPaidBy}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Who paid?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {group.members.map((m) => (
-                          <SelectItem key={m.id} value={m.id}>
-                            {m.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      onClick={handleAddExpense}
-                      className="w-full bg-primary text-primary-foreground"
-                    >
-                      Add Expense
+              <div className="space-y-3">
+                <Dialog open={expOpen} onOpenChange={setExpOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-primary text-primary-foreground h-12 rounded-xl">
+                      <Plus className="w-4 h-4 mr-2" /> Add Expense
                     </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add Expense</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-3 pt-2">
+                      <Input
+                        placeholder="What was it for?"
+                        value={expDesc}
+                        onChange={(e) => setExpDesc(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Amount (₹)"
+                        type="number"
+                        value={expAmount}
+                        onChange={(e) => setExpAmount(e.target.value)}
+                      />
+                      <Select value={expPaidBy} onValueChange={setExpPaidBy}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Who paid?" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {group.members.map((m) => (
+                            <SelectItem key={m.id} value={m.id}>
+                              {m.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={handleAddExpense}
+                        className="w-full bg-primary text-primary-foreground"
+                      >
+                        Add Expense
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                <BillScanner members={group.members} onAddExpenses={handleBillExpenses} />
+              </div>
             ) : (
               <p className="text-center text-sm text-muted-foreground py-4">
                 Add at least 2 members to start adding expenses
@@ -270,6 +283,7 @@ const GroupPage = () => {
 
         {tab === "settle" && (
           <div className="space-y-4">
+            <SmartReminders settlements={settlements} getMemberName={getMemberName} />
             <p className="text-center text-sm text-muted-foreground font-medium">
               Simplified Payments
             </p>
