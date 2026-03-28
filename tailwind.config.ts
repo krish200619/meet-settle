@@ -47,6 +47,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        settle: "hsl(var(--settle))",
+        "settle-foreground": "hsl(var(--settle-foreground))",
+        upi: "hsl(var(--upi))",
+        "upi-foreground": "hsl(var(--upi-foreground))",
+        owe: "hsl(var(--owe))",
+        "owe-foreground": "hsl(var(--owe-foreground))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
