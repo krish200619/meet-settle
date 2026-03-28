@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import confetti from "canvas-confetti";
 import Tesseract from 'tesseract.js';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
+import { QRCodeCanvas } from "qrcode.react";
 
 const getEmoji = (desc: string) => {
   const d = desc.toLowerCase();
@@ -85,6 +86,7 @@ const GroupPage = () => {
   const [scannedItems, setScannedItems] = useState<{id: string, name: string, amount: number}[]>([]);
   const [isVerifyDialogOpen, setIsVerifyDialogOpen] = useState(false);
   const [scannedPayerId, setScannedPayerId] = useState<string>("");
+  const [paymentQR, setPaymentQR] = useState<{link: string, amount: number, toName: string, upiId: string} | null>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -687,9 +689,16 @@ const GroupPage = () => {
                                 toName,
                                 s.amount
                               );
-                              setTimeout(() => {
-                                window.location.href = link;
-                              }, 1000);
+                              
+                              // Check if we are presumably on a mobile device where a direct link might work
+                              // Otherwise, show QR code fallback. 
+                              // Since we are showing a cool feature, we'll just show the QR immediately and let them know they can scan it or click it on mobile.
+                              setPaymentQR({
+                                link,
+                                amount: s.amount,
+                                toName,
+                                upiId: toMember.upiId!
+                              });
                             }}
                             className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-4 rounded-[1.25rem] shadow-lg shadow-emerald-200 transition-all active:scale-95 text-base"
                           >
@@ -909,7 +918,7 @@ const GroupPage = () => {
         </div>
       </div>
 
-      {/* OCR VERIFICATION MODAL */}
+      {/* SCAN BILL DIALOG */}
       {isVerifyDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-[2rem] w-full max-w-lg shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-5">
@@ -1023,6 +1032,54 @@ const GroupPage = () => {
         </div>
       )}
 
+      {/* UPI QR CODE DIALOG */}
+      <Dialog open={!!paymentQR} onOpenChange={(open) => !open && setPaymentQR(null)}>
+        <DialogContent className="sm:max-w-md rounded-[2rem] p-0 overflow-hidden border-0 shadow-2xl">
+           <div className="bg-gradient-to-br from-emerald-500 to-teal-700 p-8 text-center text-white relative">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+             <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-xl -ml-10 -mb-10"></div>
+             
+             <Wallet className="w-12 h-12 text-white/90 mx-auto mb-4 relative z-10" />
+             <h2 className="text-2xl font-black mb-1 relative z-10">Pay {paymentQR?.toName}</h2>
+             <p className="text-emerald-100 font-medium relative z-10">{paymentQR?.upiId}</p>
+             <p className="text-[2.5rem] font-black mt-2 tracking-tighter relative z-10">₹{paymentQR?.amount.toLocaleString('en-IN')}</p>
+           </div>
+           
+           <div className="p-8 bg-white flex flex-col items-center">
+             <div className="bg-white p-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 -mt-16 relative z-20 mb-6">
+                {paymentQR && (
+                  <QRCodeCanvas 
+                    value={paymentQR.link} 
+                    size={220}
+                    bgColor={"#ffffff"}
+                    fgColor={"#0f172a"}
+                    level={"H"}
+                    includeMargin={false}
+                  />
+                )}
+             </div>
+             
+             <p className="text-gray-500 font-medium text-center text-sm mb-6 max-w-[250px]">
+               Scan this QR code with any UPI app (GPay, PhonePe, Paytm) to pay.
+             </p>
+             
+             <div className="w-full space-y-3">
+               <a 
+                 href={paymentQR?.link}
+                 className="w-full flex items-center justify-center gap-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 font-bold py-3.5 rounded-xl transition-colors border border-emerald-100 md:hidden"
+               >
+                 Open UPI App directly
+               </a>
+               <button 
+                 onClick={() => setPaymentQR(null)}
+                 className="w-full flex items-center justify-center gap-2 bg-gray-50 text-gray-600 hover:bg-gray-100 font-bold py-3.5 rounded-xl transition-colors"
+               >
+                 Close
+               </button>
+             </div>
+           </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
