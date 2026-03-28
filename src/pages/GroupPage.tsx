@@ -12,6 +12,8 @@ import {
 } from "@/lib/store";
 import { formatCurrency, timeAgo } from "@/lib/utils";
 import { ArrowLeft, Plus, Share2, Trash2, ExternalLink } from "lucide-react";
+import BillScanner from "@/components/BillScanner";
+import SmartReminders from "@/components/SmartReminders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
