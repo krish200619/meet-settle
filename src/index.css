@@ -1,65 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
-
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
-
+    --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
-
-    --primary: 213 70% 40%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 30% 95%;
-    --secondary-foreground: 215 25% 15%;
-
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 15% 50%;
-
-    --accent: 160 60% 40%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 214 20% 90%;
-    --input: 214 20% 90%;
-    --ring: 213 70% 40%;
-
-    --radius: 0.75rem;
-
-    --settle: 160 60% 40%;
-    --settle-foreground: 0 0% 100%;
-    --upi: 213 70% 40%;
-    --upi-foreground: 0 0% 100%;
-    --owe: 25 90% 50%;
-    --owe-foreground: 0 0% 100%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 213 70% 40%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 30% 95%;
-    --sidebar-accent-foreground: 215 25% 15%;
-    --sidebar-border: 214 20% 90%;
-    --sidebar-ring: 213 70% 40%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 1rem;
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@layer base {
+  html, body {
+    min-height: 100%;
+    margin: 0;
+    scroll-behavior: smooth;
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply font-sans;
+  }
+}
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer base {
@@ -69,5 +52,39 @@ body {
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  }
+  
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-md border border-white/50 shadow-sm;
+  }
+
+  .desktop-bg {
+    @apply min-h-screen w-full flex items-center justify-center bg-[#f8fafc] overflow-hidden;
+    background-image: 
+      radial-gradient(at 40% 20%, hsla(250,100%,74%,0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(189,100%,56%,0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(355,100%,93%,0.15) 0px, transparent 50%);
+  }
+
+  .app-container {
+    @apply w-full max-w-[440px] h-[100dvh] bg-background relative sm:h-[85vh] sm:min-h-[700px] sm:rounded-[2.5rem] sm:border-[8px] sm:border-white/60 sm:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)];
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-indigo-600;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
