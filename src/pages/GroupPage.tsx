@@ -327,9 +327,17 @@ const GroupPage = () => {
           className="h-10 px-4 flex items-center justify-center rounded-full bg-violet-50 text-violet-600 hover:bg-violet-100 transition-colors font-semibold gap-2"
         >
           <Share2 className="w-4 h-4" />
-          <span className="hidden sm:inline">Share</span>
+          <span className="hidden sm:inline">Invite</span>
         </button>
       </div>
+
+      {/* EXPIRY NUDGE */}
+      <div className="bg-amber-50/50 border-y border-amber-100 py-2 px-4 flex items-center justify-center gap-2">
+        <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-amber-700 animate-pulse">⏳ This split expires in 24 hours</span>
+        <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-amber-500/60">•</span>
+        <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-amber-700">Save permanently (Pro)</span>
+      </div>
+
 
       <div className="px-4 md:px-8 py-8 lg:grid lg:grid-cols-12 lg:gap-10 lg:items-start">
         
@@ -467,9 +475,22 @@ const GroupPage = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Split With</label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[220px] overflow-y-auto pr-2">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between pl-1">
+                        <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Split With:</label>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => setSelectedMembers(group.members.map(m => m.id))}
+                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 bg-violet-50 px-2 py-1 rounded-md"
+                          >All</button>
+                          <button 
+                            onClick={() => setSelectedMembers([])}
+                            className="text-[10px] font-bold text-gray-500 hover:text-gray-600 bg-gray-100 px-2 py-1 rounded-md"
+                          >None</button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
+
                         {group.members.map((m) => {
                           const isSelected = selectedMembers.includes(m.id);
                           return (
@@ -515,12 +536,18 @@ const GroupPage = () => {
 
               {/* EXPENSE LIST */}
               {group.expenses.length === 0 && !isAdding && (
-                <div className="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                  <Receipt className="w-16 h-16 text-gray-200 mx-auto mb-4" />
-                  <p className="text-xl text-gray-900 font-bold mb-2">No expenses yet</p>
-                  <p className="text-gray-500 font-medium">Add an expense to start tracking in this group.</p>
+                <div className="text-center py-20 px-4 bg-white rounded-[2rem] border border-gray-100 shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                  <div className="relative z-10">
+                    <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-100 shadow-inner">
+                      <Receipt className="w-10 h-10 text-gray-300" />
+                    </div>
+                    <p className="text-2xl text-gray-900 font-bold mb-2">No expenses yet 😴</p>
+                    <p className="text-gray-500 font-medium text-lg">Add one and stop losing money 💸</p>
+                  </div>
                 </div>
               )}
+
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
                 {group.expenses.map((exp) => {
@@ -632,11 +659,40 @@ const GroupPage = () => {
                   <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-100">
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
                   </div>
-                  <p className="text-2xl text-gray-900 font-bold mb-2">All Settled Up!</p>
-                  <p className="text-gray-500 font-medium text-lg">Everyone has paid their fair share.</p>
+                  <p className="text-2xl text-gray-900 font-bold mb-2">All Settled Up! 🥳</p>
+                  <p className="text-gray-500 font-medium text-lg">Nobody owes anyone anything. Life is good! 🍕</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  {/* VIRAL SHARE BUTTON */}
+                  <div className="bg-violet-600 rounded-[1.5rem] p-6 text-white shadow-lg shadow-violet-200 relative overflow-hidden group">
+                     <div className="relative z-10">
+                        <h3 className="text-xl font-black mb-1">Send Reminders! 📣</h3>
+                        <p className="text-violet-100 text-sm font-medium mb-4">Don't let them forget. Share the list on WhatsApp.</p>
+                        <Button 
+                          onClick={() => {
+                            const text = settlements.map(s => {
+                              const from = getMemberName(s.from);
+                              const to = getMemberName(s.to);
+                              const emojis = ["😅", "💀", "💸", "🤐", "👀", "🤨"];
+                              const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                              return `${from} owes ${to} ₹${s.amount.toLocaleString('en-IN')} ${emoji}`;
+                            }).join("\n");
+                            const totalText = `*Settlement for ${group.name}* ⚡\n\n${text}\n\nSettle here: ${window.location.href}`;
+                            window.open(`https://wa.me/?text=${encodeURIComponent(totalText)}`, '_blank');
+                          }}
+                          className="bg-white text-violet-700 hover:bg-violet-50 font-black px-6 py-4 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          Share on WhatsApp
+                        </Button>
+                     </div>
+                     <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:scale-110 transition-transform duration-500">
+                        <Share2 className="w-32 h-32 text-white" />
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                   {settlements.map((s, i) => {
                     const fromName = getMemberName(s.from);
                     const toName = getMemberName(s.to);
@@ -670,9 +726,13 @@ const GroupPage = () => {
                         
                         <div className="flex items-center justify-between text-sm font-bold text-gray-600 bg-gray-50/80 px-4 py-3 rounded-xl mb-5 border border-gray-100">
                           <span className="text-rose-600 truncate max-w-[40%]">{fromName}</span>
-                          <span className="text-gray-400 text-[11px] px-2 uppercase tracking-wider">owes</span>
+                          <span className="text-gray-400 text-[11px] px-2 uppercase tracking-wider">
+                            {s.amount > 1000 ? "must pay" : "owes"} 
+                            {s.amount > 5000 ? " 💀" : s.amount > 500 ? " 😅" : " 😂"}
+                          </span>
                           <span className="text-emerald-600 truncate max-w-[40%] text-right">{toName}</span>
                         </div>
+
 
                         {toMember?.upiId ? (
                           <button
@@ -714,9 +774,11 @@ const GroupPage = () => {
                     );
                   })}
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
+        )}
+
 
           {/* MEMBERS TAB */}
           {activeTab === 'members' && (

@@ -99,10 +99,11 @@ const Dashboard = () => {
         {/* BANNER */}
         <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 to-indigo-700 rounded-3xl p-8 md:p-12 text-white shadow-xl shadow-indigo-200/50 flex flex-col md:flex-row items-center justify-between">
           <div className="relative z-10 text-center md:text-left">
-            <h2 className="text-3xl font-black mb-3">Split Bills Fast</h2>
+            <h2 className="text-3xl font-black mb-3">Split bills in 5 seconds ⚡</h2>
             <p className="text-violet-100 text-lg leading-relaxed font-medium max-w-lg mx-auto md:mx-0">
-              No logins, no friction. Just elegant bill splitting with friends.
+              No login. No app. Just share a link.
             </p>
+
           </div>
           <div className="relative z-10 mt-6 md:mt-0 sm:hidden w-full max-w-[200px]">
              <Button onClick={() => setOpen(true)} className="w-full h-14 px-8 rounded-2xl bg-white text-violet-700 hover:bg-violet-50 font-bold shadow-lg text-lg">
@@ -112,7 +113,13 @@ const Dashboard = () => {
           {/* Decorative shapes */}
           <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
           <div className="absolute right-40 -bottom-20 w-48 h-48 bg-indigo-400/30 rounded-full blur-2xl hidden md:block"></div>
+          
+          <div className="absolute bottom-4 left-8 md:left-12 flex items-center gap-1.5 opacity-60">
+            <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/80">Your data is saved locally — safe & private</p>
+          </div>
         </div>
+
 
         {/* GROUPS LIST */}
         <div className="space-y-6">
@@ -123,20 +130,32 @@ const Dashboard = () => {
             </span>
           </div>
 
-          {groups.length === 0 && (
-            <div className="text-center py-20 px-4 border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50/50">
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-gray-100">
-                <Users className="w-10 h-10 text-gray-400" />
-              </div>
-              <p className="text-xl text-gray-900 font-bold mb-2">No splits yet</p>
-              <p className="text-gray-500 font-medium max-w-sm mx-auto">Create one to start tracking your group expenses!</p>
-              <Button onClick={() => setOpen(true)} className="mt-6 h-12 px-6 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold sm:hidden">
-                Create New Split
-              </Button>
-            </div>
-          )}
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* PERSONAL TRACKER CARD */}
+            <div
+              onClick={() => navigate("/personal")}
+              className="group relative bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-100 rounded-[1.5rem] p-5 shadow-sm hover:shadow-xl hover:border-violet-200 hover:-translate-y-1 transition-all duration-300 active:scale-[0.98] cursor-pointer flex flex-col justify-between min-h-[160px]"
+            >
+              <div className="flex items-start justify-between mb-5">
+                <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-sm border border-violet-100">
+                  <Zap className="w-7 h-7 text-violet-600 fill-violet-600" />
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-bold text-gray-900 text-[1.25rem] mb-1">Track Personal Money 💰</h4>
+                <p className="text-sm text-gray-500 font-semibold mb-5">Keep track of your own expenses like a pro.</p>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-violet-100/50">
+                <span className="text-xs text-violet-500 font-bold uppercase tracking-wider">Mini Splitwise</span>
+                <div className="flex items-center text-violet-600 font-bold text-sm">
+                  Open <ChevronRight className="w-4 h-4 ml-1 sm:group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
+
+
             {groups.map((g) => (
               <div
                 key={g.id}
@@ -178,9 +197,24 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+
+          {groups.length === 0 && (
+            <div className="text-center py-20 px-4 border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50/50">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-gray-100">
+                <Users className="w-10 h-10 text-gray-400" />
+              </div>
+              <p className="text-xl text-gray-900 font-bold mb-2">No splits yet 😴</p>
+              <p className="text-gray-500 font-medium max-w-sm mx-auto">Create one and stop losing money 💸</p>
+
+              <Button onClick={() => setOpen(true)} className="mt-6 h-12 px-6 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold sm:hidden">
+                Create New Split
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
+
   );
 };
 
