@@ -48,11 +48,13 @@ const Dashboard = () => {
         <div className="flex items-center gap-3">
           <button 
             onClick={() => navigate("/personal")}
-            className="h-10 px-4 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600 transition-transform active:scale-95 hover:bg-violet-200 shadow-sm font-semibold gap-2"
+            className="h-10 px-4 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600 transition-transform active:scale-95 hover:bg-violet-200 shadow-sm font-bold gap-2"
           >
-            <Zap className="w-4 h-4 fill-current" />
-            <span className="hidden sm:inline">Personal</span>
+            <span className="text-lg">💰</span>
+            <span className="hidden md:inline">Track Personal Money</span>
+            <span className="md:hidden">Track</span>
           </button>
+
           
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -98,13 +100,13 @@ const Dashboard = () => {
       <div className="px-4 md:px-8 py-8 space-y-10">
         {/* BANNER */}
         <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 to-indigo-700 rounded-3xl p-8 md:p-12 text-white shadow-xl shadow-indigo-200/50 flex flex-col md:flex-row items-center justify-between">
-          <div className="relative z-10 text-center md:text-left">
-            <h2 className="text-3xl font-black mb-3">Split bills in 5 seconds ⚡</h2>
-            <p className="text-violet-100 text-lg leading-relaxed font-medium max-w-lg mx-auto md:mx-0">
-              No login. No app. Just share a link.
+          <div className="relative z-10 text-center w-full">
+            <h2 className="text-3xl md:text-4xl font-black mb-3 tracking-tight">Split bills in 5 seconds ⚡</h2>
+            <p className="text-violet-100 text-lg md:text-xl leading-relaxed font-bold max-w-2xl mx-auto">
+              No login. Just share a link.
             </p>
-
           </div>
+
           <div className="relative z-10 mt-6 md:mt-0 sm:hidden w-full max-w-[200px]">
              <Button onClick={() => setOpen(true)} className="w-full h-14 px-8 rounded-2xl bg-white text-violet-700 hover:bg-violet-50 font-bold shadow-lg text-lg">
                 <Plus className="w-5 h-5 mr-2" /> New Split
@@ -114,10 +116,11 @@ const Dashboard = () => {
           <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
           <div className="absolute right-40 -bottom-20 w-48 h-48 bg-indigo-400/30 rounded-full blur-2xl hidden md:block"></div>
           
-          <div className="absolute bottom-4 left-8 md:left-12 flex items-center gap-1.5 opacity-60">
+          <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-1.5 opacity-60">
             <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
             <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/80">Your data is saved locally — safe & private</p>
           </div>
+
         </div>
 
 

@@ -671,16 +671,17 @@ const GroupPage = () => {
                         <p className="text-violet-100 text-sm font-medium mb-4">Don't let them forget. Share the list on WhatsApp.</p>
                         <Button 
                           onClick={() => {
-                            const text = settlements.map(s => {
-                              const from = getMemberName(s.from);
-                              const to = getMemberName(s.to);
-                              const emojis = ["😅", "💀", "💸", "🤐", "👀", "🤨"];
-                              const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-                              return `${from} owes ${to} ₹${s.amount.toLocaleString('en-IN')} ${emoji}`;
-                            }).join("\n");
-                            const totalText = `*Settlement for ${group.name}* ⚡\n\n${text}\n\nSettle here: ${window.location.href}`;
-                            window.open(`https://wa.me/?text=${encodeURIComponent(totalText)}`, '_blank');
-                          }}
+                              const unpaid = settlements.map(s => {
+                                const from = getMemberName(s.from);
+                                const to = getMemberName(s.to);
+                                const emojis = ["😅", "💀", "💸", "🤐", "👀", "🤨"];
+                                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                                return `👉 ${from} owes ${to} ₹${s.amount.toLocaleString('en-IN')} ${emoji}`;
+                              }).join("\n");
+                              const totalText = `*${group.name} Split Summary* ⚡\n\n${unpaid}\n\nSettle fast: ${window.location.href}\n\n_Pay up 😂_`;
+                              window.open(`https://wa.me/?text=${encodeURIComponent(totalText)}`, '_blank');
+                            }}
+
                           className="bg-white text-violet-700 hover:bg-violet-50 font-black px-6 py-4 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
                           Share on WhatsApp
@@ -724,14 +725,19 @@ const GroupPage = () => {
 
                         </div>
                         
-                        <div className="flex items-center justify-between text-sm font-bold text-gray-600 bg-gray-50/80 px-4 py-3 rounded-xl mb-5 border border-gray-100">
+                        <div className="flex items-center justify-between text-sm font-bold bg-gray-50/80 px-4 py-3 rounded-xl mb-5 border border-gray-100 group/row">
                           <span className="text-rose-600 truncate max-w-[40%]">{fromName}</span>
-                          <span className="text-gray-400 text-[11px] px-2 uppercase tracking-wider">
-                            {s.amount > 1000 ? "must pay" : "owes"} 
-                            {s.amount > 5000 ? " 💀" : s.amount > 500 ? " 😅" : " 😂"}
-                          </span>
+                          <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-[10px] uppercase tracking-tighter">
+                              {s.amount > 1000 ? "Still pending" : "owes you"}
+                            </span>
+                            <span className="text-gray-500 text-[11px] font-black">
+                              {s.amount > 5000 ? "💀" : s.amount > 500 ? "😅" : "😂"}
+                            </span>
+                          </div>
                           <span className="text-emerald-600 truncate max-w-[40%] text-right">{toName}</span>
                         </div>
+
 
 
                         {toMember?.upiId ? (
@@ -760,16 +766,30 @@ const GroupPage = () => {
                                 upiId: toMember.upiId!
                               });
                             }}
-                            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-4 rounded-[1.25rem] shadow-lg shadow-emerald-200 transition-all active:scale-95 text-base"
+                            className="w-full flex items-center justify-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-emerald-200 transition-all active:scale-95 text-lg"
                           >
-                            <Wallet className="w-5 h-5" />
+                            <Wallet className="w-6 h-6 shrink-0" />
                             Pay via UPI
                           </button>
                         ) : (
-                          <div className="text-center text-sm font-bold text-gray-500 bg-gray-50 py-4 rounded-xl border border-dashed border-gray-200">
-                            {toName} has no UPI ID
+                          <div className="flex flex-col gap-2">
+                             <button
+                               onClick={() => {
+                                 const emojis = ["😭", "💀", "😅", "🤨"];
+                                 const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                                 const reminder = `Bro ₹${s.amount.toLocaleString('en-IN')} de de ${emoji}\n\nLink: ${window.location.href}`;
+                                 window.open(`https://wa.me/?text=${encodeURIComponent(reminder)}`, '_blank');
+                               }}
+                               className="w-full flex items-center justify-center gap-2 bg-violet-50 text-violet-700 font-bold py-4 rounded-xl border border-violet-100 hover:bg-violet-100 transition-all"
+                             >
+                               <Share2 className="w-4 h-4" /> Remind {fromName}
+                             </button>
+                             <div className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 py-2 rounded-lg border border-dashed border-gray-200">
+                               {toName} has no UPI ID
+                             </div>
                           </div>
                         )}
+
                       </div>
                     );
                   })}
